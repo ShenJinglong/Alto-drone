@@ -3,8 +3,10 @@ import sys
 
 RECORD_VIDEO = False
 
-IMAGE_WIDTH = 160
-IMAGE_HEIGHT = 120
+IMAGE_WIDTH = 320
+IMAGE_HEIGHT = 240
+IMAGE_CENTER_X = IMAGE_WIDTH / 2
+IMAGE_CENTER_Y = IMAGE_HEIGHT / 2
 
 FLY_ANGLE_P = 110
 FLY_ANGLE_N = 90
@@ -36,3 +38,12 @@ ANGLE_CLASSIFIER_TH = 0.3                                                       
 RHO_VARIANCE_MIN = 10                                                                # 直线极径最小方差
 RHO_VARIANCE_MAX = 100                                                               # 直线极径最大方差
 """
+
+CANNY_GRID_TH_MIN = 65
+CANNY_GRID_TH_MAX = 130
+
+ANGLE_CLASSIFIER_TH = 0.3
+RHO_CLASSIFIER_TH = 50
+
+RHO_VARIANCE_MIN = 0
+RHO_VARIANCE_MAX = 500

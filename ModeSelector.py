@@ -46,8 +46,8 @@ def mode_selector(flight):
         else:
             show_error()
     else:
-        flight.next_state = macro.MODE_SELECTOR
-        flight.main_mode = 0x80
+        flight.next_state = macro.TL_TAKE_OFF
+        flight.main_mode = 0x90
 
 def show_mode(blink_time):
     for i in range(blink_time):

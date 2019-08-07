@@ -1,3 +1,7 @@
 # -*- coding: utf-8 -*-
 
 MODE_SELECTOR = -1
+
+TL_TAKE_OFF = 0
+TL_ALIGN_TO_START_POLE = 1
+TL_DETECT_BAR_CODE = 2

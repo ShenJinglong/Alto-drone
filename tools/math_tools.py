@@ -58,7 +58,7 @@ def lineClassifier(lines):
         flag_indexs = []
         if len(ss_class) > 1:
             for i in range(1, len(ss_class)):
-                if ss_class[i][0] - ss_class[i - 1][0] > 30:
+                if ss_class[i][0] - ss_class[i - 1][0] > global_params.RHO_CLASSIFIER_TH:
                     flag_indexs.append(i)
         flag_indexs.insert(0, 0)
         flag_indexs.append(len(ss_class))
@@ -68,8 +68,8 @@ def lineClassifier(lines):
     __linesClass = []
     for __class in __ss_class:
         variance = np.var([line[0] for line in __class])
-        # print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>', variance)
-        # print(__class)
+        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>', variance)
+        print(__class)
         if variance >= global_params.RHO_VARIANCE_MIN and variance <= global_params.RHO_VARIANCE_MAX:
             __linesClass.append(__class)
     return __linesClass
@@ -150,7 +150,7 @@ def getLineAngleY(line):
     return int(line[1] * 180 / np.pi)
 
 def remove_horizontal_line(path_params):
-    return [path for path in path_params if path[1] < 0.78 and path[1] > -0.78]
+    return [path for path in path_params if path[1] < 0.3 and path[1] > -0.3]
 
 def remove_vertical_line(path_params):
     return [path for path in path_params if path[1] < 2.2 and path[1] > 0.8]

@@ -6,7 +6,8 @@ import multiprocessing
 import global_params
 
 from Filter import MedianFilter
-from OpticalFlow import OpticalFlow
+# from OpticalFlow import OpticalFlow
+from DenseFlow import DenseFlow
 
 if global_params.RASPBERRY_MODE:
     import V_UCom as com
@@ -21,7 +22,7 @@ class Flight(object):
         # self.__cap = cv2.VideoCapture('../videos/2019-07-26 08-14-59.avi')
 
         self.median_filter = MedianFilter()
-        self.main_mode = 0x70
+        self.main_mode = 0xA0
 
         if global_params.RASPBERRY_MODE:
             com.init(mode = 2)
@@ -32,28 +33,37 @@ class Flight(object):
             fourcc = cv2.VideoWriter_fourcc(*'XVID')
             self.__video_recorder = cv2.VideoWriter('../../Videos/' + time.strftime('%Y-%m-%d %H-%M-%S', time.localtime(time.time())) + '.avi', fourcc, 20.0, (160, 120))
 
-        self.__frame_queue = multiprocessing.Queue(maxsize = 1)
-        self.__flow_xy = multiprocessing.Queue(maxsize = 1)
-        self.__optical_flow = OpticalFlow(self.__frame_queue, self.__flow_xy)
-        self.__optical_flow.start()
+        # self.__frame_queue = multiprocessing.Queue(maxsize = 1)
+        # self.__flow_xy = multiprocessing.Queue(maxsize = 1)
+        # self.__optical_flow = OpticalFlow(self.__frame_queue, self.__flow_xy)
+        # self.__optical_flow.start()
+        # self.__frame_queue_dense = multiprocessing.Queue(maxsize = 1)
+        # self.__flow_xy_dense = multiprocessing.Queue(maxsize = 1)
+        # self.__dense_flow = DenseFlow(self.__frame_queue_dense, self.__flow_xy_dense)
+        # self.__dense_flow.start()
 
     def read_camera(self):
         ret, frame = self.__cap.read()
         if ret:
             frame = cv2.resize(frame, (global_params.IMAGE_WIDTH, global_params.IMAGE_HEIGHT))
-            try:
-                self.__frame_queue.put(frame, False)
-            except:
-                pass
+            # try:
+                # self.__frame_queue_dense.put(frame.copy(), False)
+            # except:
+                # pass
             if global_params.RECORD_VIDEO:
                 self.__video_recorder.write(frame)
         return ret, frame
 
     def destroy(self):
         self.__cap.release()
+        """
         if self.__optical_flow.is_alive():
             self.__optical_flow.terminate()
             self.__optical_flow.join()
+        """
+        # if self.__dense_flow.is_alive():
+            # self.__dense_flow.terminate()
+            # self.__dense_flow.join()
 
     def send(self, uart_buff):
         # get_bytearray(uart_buff, self)
@@ -65,8 +75,8 @@ class Flight(object):
 
     def get_speed(self):
         x_speed, y_speed = 0, 0
-        if not self.__flow_xy.empty():
-            x_speed, y_speed = self.__flow_xy.get()
+        # if not self.__flow_xy_dense.empty():
+            # x_speed, y_speed = self.__flow_xy_dense.get()
         return (x_speed, y_speed)
 
     def attach_fsm(self, state, fsm):
@@ -87,44 +97,15 @@ class Flight(object):
 def get_bytearray(data_dict, flight):
     if data_dict['mode'] == 'stop_tp':
         dst_point_x = int(data_dict['dst_point_x'])
-        dst_point_y = int(data_dict['dst_point_y'])
-        speed_x = int(data_dict['speed_x'])
-        speed_y = int(data_dict['speed_y'])
-        motion = data_dict['motion']
         flight_mode = flight.main_mode + 0x00
-        print('stop_tp:', 'x:', dst_point_x, 'y:', dst_point_y, 's_x:', speed_x, 's_y:', speed_y, 'm:', motion, 'mo:', flight_mode)
-        return bytearray([0x55,               0xAA,                  flight_mode,           dst_point_x & 0xff,
-                          dst_point_y & 0xff, (speed_x >> 8) & 0xff, speed_x & 0xff, (speed_y >> 8) & 0xff, 
-                          speed_y & 0xff,     0x00,                  motion,           0xAA                ])
-    elif data_dict['mode'] == 'go_x':
-        flight_angle = int(data_dict['flight_angle'])
-        dst_point_y = int(data_dict['dst_point_y'])
-        speed_x = int(data_dict['speed_x'])
-        speed_y = int(data_dict['speed_y'])
-        path_angle = int(data_dict['path_angle'])
+        print('dst_point_x:', dst_point_x)
+        return bytearray([0x55, 0xAA, flight_mode, dst_point_x & 0xff,
+                          0x00, 0x00, 0x00,        0x00,
+                          0x00, 0x00, 0x00,        0xAA               ])
+    elif data_dict['mode'] == 'go':
         flight_mode = flight.main_mode + 0x02
-        print('go_x:', 'f_a:', flight_angle, 'y:', dst_point_y, 's_x:', speed_x, 's_y:', speed_y, 'p_a:', path_angle, 'mo:', flight_mode)
-        return bytearray([0x55,               0xAA,                  flight_mode,           flight_angle & 0xff,
-                          dst_point_y & 0xff, (speed_x >> 8) & 0xff, speed_x & 0xff, (speed_y >> 8) & 0xff, 
-                          speed_y & 0xff,     path_angle & 0xff,     0x00,           0xAA                  ])
-    elif data_dict['mode'] == 'go_y':
-        dst_point_x = int(data_dict['dst_point_x'])
-        flight_angle = int(data_dict['flight_angle'])
-        speed_x = int(data_dict['speed_x'])
-        speed_y = int(data_dict['speed_y'])
-        path_angle = int(data_dict['path_angle'])
-        flight_mode = flight.main_mode + 0x03
-        print('go_y:', 'f_a:', flight_angle, 'x:', dst_point_x, 's_x:', speed_x, 's_y:', speed_y, 'p_a:', path_angle, 'mo:', flight_mode)
-        return bytearray([0x55,               0xAA,                  flight_mode,           dst_point_x & 0xff,
-                          flight_angle & 0xff, (speed_x >> 8) & 0xff, speed_x & 0xff, (speed_y >> 8) & 0xff, 
-                          speed_y & 0xff,     path_angle & 0xff,     0x00,           0xAA                   ])
-    elif data_dict['mode'] == 'brake':
-        speed_x = int(data_dict['speed_x'])
-        speed_y = int(data_dict['speed_y'])
-        flight_mode = flight.main_mode + 0x01
-        print('brake:', 'speed_X:', speed_x, 'speed_y:', speed_y, 'mo:', flight_mode)
-        return bytearray([0x55,           0xAA,                  flight_mode,    0x00,
-                          0x00,           (speed_x >> 8) & 0xff, speed_x & 0xff, (speed_y >> 8) & 0xff, 
-                          speed_y & 0xff, 0x00,                  0x00,           0xAA                  ])
+        return bytearray([0x55, 0xAA, flight_mode, 0x00,
+                          0x00, 0x00, 0x00,        0x00,
+                          0x00, 0x00, 0x00,        0xAA ])
 
         
