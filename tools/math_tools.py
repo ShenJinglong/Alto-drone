@@ -68,8 +68,8 @@ def lineClassifier(lines):
     __linesClass = []
     for __class in __ss_class:
         variance = np.var([line[0] for line in __class])
-        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>', variance)
-        print(__class)
+        # print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>', variance)
+        # print(__class)
         if variance >= global_params.RHO_VARIANCE_MIN and variance <= global_params.RHO_VARIANCE_MAX:
             __linesClass.append(__class)
     return __linesClass

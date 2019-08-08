@@ -11,7 +11,7 @@ class World(object):
     def __init__(self):
         self._flight = Flight()
         self._fsm_mgr = fsm_mgr()
-        self._flight.attach_fsm(macro.TL_ALIGN_TO_START_POLE, self._fsm_mgr.get_fsm(macro.TL_ALIGN_TO_START_POLE))
+        self._flight.attach_fsm(macro.ALTO_GO, self._fsm_mgr.get_fsm(macro.ALTO_GO))
 
     def __destroy_flight(self):
         self._flight.destroy()
