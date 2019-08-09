@@ -108,7 +108,7 @@ def get_bytearray(data_dict, flight):
         speed_x = int(data_dict['speed_x'])
         speed_y = int(data_dict['speed_y'])
         flight_mode = flight.main_mode + 0x00
-        print('dst_point_x:', dst_point_x, 'dst_point_y:', dst_point_y, 'speed_x:', speed_x, 'speed_y', speed_y)
+        # print('dst_point_x:', dst_point_x, 'dst_point_y:', dst_point_y, 'speed_x:', speed_x, 'speed_y', speed_y)
         return bytearray([0x55,               0xAA,                  flight_mode,    dst_point_x & 0xff,
                           dst_point_y & 0xff, (speed_x >> 8) & 0xff, speed_x & 0xff, (speed_y >> 8) & 0xff,
                           speed_y & 0xff,     0x00,                  0x00,           0xAA                  ])
@@ -124,7 +124,7 @@ def get_bytearray(data_dict, flight):
         speed_y = int(data_dict['speed_y'])
         path_angle = int(data_dict['path_angle'])
         flight_mode = flight.main_mode + 0x02
-        print('go_x:', 'f_a:', flight_angle, 'y:', dst_point_y, 's_x:', speed_x, 's_y:', speed_y, 'p_a:', path_angle, 'mo:', flight_mode)
+        # print('go_x:', 'f_a:', flight_angle, 'y:', dst_point_y, 's_x:', speed_x, 's_y:', speed_y, 'p_a:', path_angle, 'mo:', flight_mode)
         return bytearray([0x55,               0xAA,                  flight_mode,    flight_angle & 0xff,
                           dst_point_y & 0xff, (speed_x >> 8) & 0xff, speed_x & 0xff, (speed_y >> 8) & 0xff, 
                           speed_y & 0xff,     path_angle & 0xff,     0x00,           0xAA                  ])
@@ -135,7 +135,7 @@ def get_bytearray(data_dict, flight):
         speed_y = int(data_dict['speed_y'])
         path_angle = int(data_dict['path_angle'])
         flight_mode = flight.main_mode + 0x03
-        print('go_y:', 'f_a:', flight_angle, 'x:', dst_point_x, 's_x:', speed_x, 's_y:', speed_y, 'p_a:', path_angle, 'mo:', flight_mode)
+        # print('go_y:', 'f_a:', flight_angle, 'x:', dst_point_x, 's_x:', speed_x, 's_y:', speed_y, 'p_a:', path_angle, 'mo:', flight_mode)
         return bytearray([0x55,                0xAA,                  flight_mode,    dst_point_x & 0xff,
                           flight_angle & 0xff, (speed_x >> 8) & 0xff, speed_x & 0xff, (speed_y >> 8) & 0xff, 
                           speed_y & 0xff,      path_angle & 0xff,     0x00,           0xAA                   ])
@@ -143,7 +143,7 @@ def get_bytearray(data_dict, flight):
         speed_x = int(data_dict['speed_x'])
         speed_y = int(data_dict['speed_y'])
         flight_mode = flight.main_mode + 0x01
-        print('brake:', 'speed_X:', speed_x, 'speed_y:', speed_y, 'mo:', flight_mode)
+        # print('brake:', 'speed_X:', speed_x, 'speed_y:', speed_y, 'mo:', flight_mode)
         return bytearray([0x55,           0xAA,                  flight_mode,    0x00,
                           0x00,           (speed_x >> 8) & 0xff, speed_x & 0xff, (speed_y >> 8) & 0xff, 
                           speed_y & 0xff, 0x00,                  0x00,           0xAA                  ])
