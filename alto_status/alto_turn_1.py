@@ -71,7 +71,7 @@ def alto_turn_1(flight):
 
     alto_turn_1_counter += 1
 
-    if alto_turn_1_counter == 50:
+    if alto_turn_1_counter == 60:
         alto_turn_1_counter = 0
         flight.next_state = macro.ALTO_BREAK_1
         print('>>> [!] ALTO_TURN_1 -> ALTO_BREAK_1')

@@ -45,11 +45,11 @@ def alto_back(flight):
         flight.median_filter.add_number_c1(math_tools.getLineWithX(lines_params[0], 160)[1])
         flight.median_filter.add_number_c2(math_tools.getLineAngleX(lines_params[0]))
     else:
-        flight.median_filter.add_number_c1(global_params.IMAGE_CENTER_Y + 30)
+        flight.median_filter.add_number_c1(global_params.IMAGE_CENTER_Y + 10)
         flight.median_filter.add_number_c2(0)
 
     flight_angle = 110
-    dst_point_y = flight.median_filter.get_result_number_c1() - 30
+    dst_point_y = flight.median_filter.get_result_number_c1() - 10
     path_angle = flight.median_filter.get_result_number_c2() + 100
     speed_x, speed_y = flight.get_speed()
     data_to_send = {

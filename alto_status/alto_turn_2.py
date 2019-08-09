@@ -70,7 +70,7 @@ def alto_turn_2(flight):
 
     alto_turn_2_counter += 1
 
-    if alto_turn_2_counter == 100:
+    if alto_turn_2_counter == 90:
         alto_turn_2_counter = 0
         flight.next_state = macro.ALTO_BREAK_2
         print('>>> [!] ALTO_TURN_2 -> ALTO_BREAK_2')

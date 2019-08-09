@@ -26,7 +26,7 @@ class Flight(object):
         # self.__cap = cv2.VideoCapture('../videos/2019-08-08 11-31-32.avi')
         # self.__cap = cv2.VideoCapture('../videos/2019-08-08 17-53-27.avi')
         # self.__cap = cv2.VideoCapture('../videos/2019-08-08 18-46-32.avi')
-        # self.__cap = cv2.VideoCapture('../videos/2019-08-09 03-12-09.avi')
+        # self.__cap = cv2.VideoCapture('../videos/2019-08-09 05-53-40.avi')
 
         self.median_filter = MedianFilter()
         self.main_mode = 0x70

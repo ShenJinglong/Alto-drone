@@ -10,6 +10,7 @@ from tl_status.tl_take_off import tl_take_off_fsm
 from tl_status.tl_align_to_start_pole import tl_align_to_start_pole_fsm
 from tl_status.tl_detect_bar_code import tl_detect_bar_code_fsm
 
+from alto_status.alto_take_off import alto_take_off_fsm
 from alto_status.alto_go import alto_go_fsm
 from alto_status.alto_brake_right import alto_brake_right_fsm
 from alto_status.alto_stop_to_target_pole import alto_stop_to_target_pole_fsm
@@ -39,6 +40,7 @@ class fsm_mgr(object):
         self._fsms[macro.TL_ALIGN_TO_START_POLE] = tl_align_to_start_pole_fsm()
         self._fsms[macro.TL_DETECT_BAR_CODE] = tl_detect_bar_code_fsm()
 
+        self._fsms[macro.ALTO_TAKE_OFF] = alto_take_off_fsm()
         self._fsms[macro.ALTO_GO] = alto_go_fsm()
         self._fsms[macro.ALTO_BRAKE_RIGHT] = alto_brake_right_fsm()
         self._fsms[macro.ALTO_STOP_TO_TARGET_POLE] = alto_stop_to_target_pole_fsm()

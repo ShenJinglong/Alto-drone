@@ -156,7 +156,7 @@ def getLineAngleY(line):
     return int(line[1] * 180 / np.pi)
 
 def remove_horizontal_line(path_params):
-    return [path for path in path_params if path[1] < 0.3 and path[1] > -0.3]
+    return [path for path in path_params if path[1] < 0.2 and path[1] > -0.2]
 
 def remove_vertical_line(path_params):
-    return [path for path in path_params if path[1] < 2.2 and path[1] > 0.8]
+    return [path for path in path_params if path[1] < 1.8 and path[1] > 1.2]
