@@ -8,8 +8,18 @@ def image_pre_process(src_img):
     img = src_img.copy()
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     reduce_noise_img = cv2.GaussianBlur(gray_img, (5,5), 0, 0) # 9，9
-    cadst = cv2.Canny(reduce_noise_img, global_params.CANNY_GRID_TH_MIN, global_params.CANNY_GRID_TH_MAX)
+    edges = cv2.Canny(reduce_noise_img, 45, 90, apertureSize = 3)
+
+    kernel = np.ones((5, 5), np.uint8)
+    dilation = cv2.dilate(edges, kernel, iterations = 1)
+#     closing = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel)
+#     opening = cv2.morphologyEx(closing, cv2.MORPH_OPEN, kernel)
+
+    cadst = cv2.Canny(dilation, 100, 200)
 #     cv2.imshow('eee', cadst)
+#     cv2.imshow('rrr', edges)
+#     cv2.imshow('yyy', closing)
+#     cv2.imshow('ttt', opening)
     return cadst
 
 def drawHoughLine(_inputArray, singleLine, color):

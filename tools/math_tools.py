@@ -124,24 +124,30 @@ def findCrossPoint(lines):
 
 
 def getLineWithX(line, asix_x):
-    rho, theta = line[0], line[1]
-    if theta == np.pi / 2:
-        return (int(asix_x), int(rho))
-    else:
-        k = -(np.cos(theta) / np.sin(theta))
-        b = rho / np.sin(theta)
-        y_r = k * asix_x + b
-        return (int(asix_x), int(y_r))
+    try:
+        rho, theta = line[0], line[1]
+        if theta == np.pi / 2:
+            return (int(asix_x), int(rho))
+        else:
+            k = -(np.cos(theta) / np.sin(theta))
+            b = rho / np.sin(theta)
+            y_r = k * asix_x + b
+            return (int(asix_x), int(y_r))
+    except ValueError:
+        return (int(asix_x), int(global_params.IMAGE_HEIGHT / 2))
 
 def getLineWithY(line, asix_y):
-    rho, theta = line[0], line[1]
-    if theta == 0:
-        return (int(rho), int(asix_y))
-    else:
-        k = -(np.cos(theta) / np.sin(theta))
-        b = rho / np.sin(theta)
-        x_r = (asix_y - b) / k
-        return (int(x_r), int(asix_y))
+    try:
+        rho, theta = line[0], line[1]
+        if theta == 0:
+            return (int(rho), int(asix_y))
+        else:
+            k = -(np.cos(theta) / np.sin(theta))
+            b = rho / np.sin(theta)
+            x_r = (asix_y - b) / k
+            return (int(x_r), int(asix_y))
+    except:
+        return (int(global_params.IMAGE_WIDTH / 2), int(asix_y))
 
 def getLineAngleX(line):
     return -int((np.pi/2 - line[1]) * 180 / np.pi)

@@ -21,6 +21,12 @@ class Flight(object):
         # self.__cap = cv2.VideoCapture('../videos/2019-07-20 01-18-11.avi')
         # self.__cap = cv2.VideoCapture('../videos/2019-07-26 08-14-59.avi')
         # self.__cap = cv2.VideoCapture('../videos/2019-08-07 23-52-32.avi')
+        # self.__cap = cv2.VideoCapture('../videos/2019-08-08 02-28-55.avi')
+        # self.__cap = cv2.VideoCapture('../videos/2019-08-08 09-22-44.avi')
+        # self.__cap = cv2.VideoCapture('../videos/2019-08-08 11-31-32.avi')
+        # self.__cap = cv2.VideoCapture('../videos/2019-08-08 17-53-27.avi')
+        # self.__cap = cv2.VideoCapture('../videos/2019-08-08 18-46-32.avi')
+        # self.__cap = cv2.VideoCapture('../videos/2019-08-09 03-12-09.avi')
 
         self.median_filter = MedianFilter()
         self.main_mode = 0x70
@@ -67,7 +73,7 @@ class Flight(object):
             self.__optical_flow.join()
 
     def send(self, uart_buff):
-        # get_bytearray(uart_buff, self)
+        get_bytearray(uart_buff, self)
         if global_params.RASPBERRY_MODE:
             if type(uart_buff) == dict:
                 com.send(get_bytearray(uart_buff, self))
@@ -98,11 +104,14 @@ class Flight(object):
 def get_bytearray(data_dict, flight):
     if data_dict['mode'] == 'stop_tp':
         dst_point_x = int(data_dict['dst_point_x'])
+        dst_point_y = int(data_dict['dst_point_y'])
+        speed_x = int(data_dict['speed_x'])
+        speed_y = int(data_dict['speed_y'])
         flight_mode = flight.main_mode + 0x00
-        print('dst_point_x:', dst_point_x)
-        return bytearray([0x55, 0xAA, flight_mode, dst_point_x & 0xff,
-                          0x00, 0x00, 0x00,        0x00,
-                          0x00, 0x00, 0x00,        0xAA               ])
+        print('dst_point_x:', dst_point_x, 'dst_point_y:', dst_point_y, 'speed_x:', speed_x, 'speed_y', speed_y)
+        return bytearray([0x55,               0xAA,                  flight_mode,    dst_point_x & 0xff,
+                          dst_point_y & 0xff, (speed_x >> 8) & 0xff, speed_x & 0xff, (speed_y >> 8) & 0xff,
+                          speed_y & 0xff,     0x00,                  0x00,           0xAA                  ])
     elif data_dict['mode'] == 'go':
         flight_mode = flight.main_mode + 0x02
         return bytearray([0x55, 0xAA, flight_mode, 0x00,
@@ -116,8 +125,27 @@ def get_bytearray(data_dict, flight):
         path_angle = int(data_dict['path_angle'])
         flight_mode = flight.main_mode + 0x02
         print('go_x:', 'f_a:', flight_angle, 'y:', dst_point_y, 's_x:', speed_x, 's_y:', speed_y, 'p_a:', path_angle, 'mo:', flight_mode)
-        return bytearray([0x55,               0xAA,                  flight_mode,           flight_angle & 0xff,
+        return bytearray([0x55,               0xAA,                  flight_mode,    flight_angle & 0xff,
                           dst_point_y & 0xff, (speed_x >> 8) & 0xff, speed_x & 0xff, (speed_y >> 8) & 0xff, 
                           speed_y & 0xff,     path_angle & 0xff,     0x00,           0xAA                  ])
+    elif data_dict['mode'] == 'go_y':
+        flight_angle = int(data_dict['flight_angle'])
+        dst_point_x = int(data_dict['dst_point_x'])
+        speed_x = int(data_dict['speed_x'])
+        speed_y = int(data_dict['speed_y'])
+        path_angle = int(data_dict['path_angle'])
+        flight_mode = flight.main_mode + 0x03
+        print('go_y:', 'f_a:', flight_angle, 'x:', dst_point_x, 's_x:', speed_x, 's_y:', speed_y, 'p_a:', path_angle, 'mo:', flight_mode)
+        return bytearray([0x55,                0xAA,                  flight_mode,    dst_point_x & 0xff,
+                          flight_angle & 0xff, (speed_x >> 8) & 0xff, speed_x & 0xff, (speed_y >> 8) & 0xff, 
+                          speed_y & 0xff,      path_angle & 0xff,     0x00,           0xAA                   ])
+    elif data_dict['mode'] == 'brake':
+        speed_x = int(data_dict['speed_x'])
+        speed_y = int(data_dict['speed_y'])
+        flight_mode = flight.main_mode + 0x01
+        print('brake:', 'speed_X:', speed_x, 'speed_y:', speed_y, 'mo:', flight_mode)
+        return bytearray([0x55,           0xAA,                  flight_mode,    0x00,
+                          0x00,           (speed_x >> 8) & 0xff, speed_x & 0xff, (speed_y >> 8) & 0xff, 
+                          speed_y & 0xff, 0x00,                  0x00,           0xAA                  ])
 
         
