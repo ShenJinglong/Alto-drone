@@ -27,6 +27,7 @@ if global_params.RASPBERRY_MODE:
     GPIO.setup(global_params.MODE_PIN_2, GPIO.IN)
     GPIO.setup(12, GPIO.OUT, initial = GPIO.HIGH)
     GPIO.setup(global_params.SHOW_MODE_PIN, GPIO.OUT, initial = GPIO.HIGH)
+    GPIO.setup(11, GPIO.OUT, initial = GPIO.LOW)
 
 def mode_selector(flight):
     if global_params.RASPBERRY_MODE:
@@ -43,14 +44,14 @@ def mode_selector(flight):
         else:
             show_error()
     else:
-        flight.next_state = macro.TL_TAKE_OFF
+        flight.next_state = macro.ALTO_TAKE_OFF
         flight.main_mode = 0x90
 
 def show_mode(blink_time):
     for i in range(blink_time):
-        GPIO.output(17, 0)
+        GPIO.output(global_params.SHOW_MODE_PIN, 0)
         time.sleep(0.5)
-        GPIO.output(17, 1)
+        GPIO.output(global_params.SHOW_MODE_PIN, 1)
         time.sleep(0.5)
 
 def show_error():

@@ -14,6 +14,7 @@ from alto_status import alto_params
 
 if global_params.USE_VD:
     import V_Display as vd
+    import RPi.GPIO as GPIO
 
 class alto_stop_to_target_pole_fsm(base_fsm):
     def enter_state(self, flight):
@@ -87,6 +88,12 @@ def alto_stop_to_target_pole(flight):
         vd.show(frame)
     else:
         cv2.imshow('frame', frame)
+
+    if global_params.RASPBERRY_MODE:
+        if alto_stop_to_target_pole_counter >= alto_params.ALTO_STOP_TO_TARGET_POLE_NUM - 40:
+            GPIO.output(11, 1)
+            print('cap')
+        
 
     alto_stop_to_target_pole_counter += 1
     if alto_stop_to_target_pole_counter == alto_params.ALTO_STOP_TO_TARGET_POLE_NUM:

@@ -7,6 +7,7 @@ import global_params
 if global_params.USE_VD:
     import V_Display as vd
 
+    
 class stop_land_fsm(base_fsm):
     def enter_state(self, flight):
         flight.median_filter.refresh()
@@ -22,7 +23,7 @@ def stop_land(flight):
     if not ret: return
 
     data_to_send = {
-        'mode': 'land'
+        'mode': 'land_c'
     }
     flight.send(data_to_send)
 

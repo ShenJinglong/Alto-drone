@@ -29,6 +29,7 @@ class Flight(object):
         # self.__cap = cv2.VideoCapture('../videos/2019-08-09 15-11-46.avi')
         # self.__cap = cv2.VideoCapture('../videos/2019-08-09 15-08-18.avi')
         # self.__cap = cv2.VideoCapture('../videos/2019-08-09 16-06-28.avi')
+        # self.__cap = cv2.VideoCapture('../videos/2019-08-10 11-29-48.avi')
 
         self.median_filter = MedianFilter()
         self.main_mode = 0x70
@@ -156,3 +157,17 @@ def get_bytearray(data_dict, flight):
         return bytearray([0x55,               0xAA, flight_mode, dst_point_x & 0xff,
                           dst_point_y & 0xff, 0x00, 0x00,        0x00,
                           0x00,               0x00, 0x02,        0xAA               ])
+    elif data_dict['mode'] == 'stop_tc':
+        dst_point_x = int(data_dict['dst_point_x'])
+        dst_point_y = int(data_dict['dst_point_y'])
+        flight_mode = flight.main_mode + 0x00
+        return bytearray([0x55,                 0xAA,                      flight_mode,        (dst_point_x >> 8) & 0xff,
+                          (dst_point_x & 0xff), (dst_point_y >> 8) & 0xff, dst_point_y & 0xff, 0x00,
+                          0x00,                 0x00,                      0x00,               0xAA                      ])
+    elif data_dict['mode'] == 'land_c':
+        dst_point_x = int(80)
+        dst_point_y = int(60)
+        flight_mode = flight.main_mode + 0x00
+        return bytearray([0x55,                 0xAA,                      flight_mode,        (dst_point_x >> 8) & 0xff,
+                          (dst_point_x & 0xff), (dst_point_y >> 8) & 0xff, dst_point_y & 0xff, 0x00,
+                          0x00,                 0x00,                      0x02,               0xAA                      ])

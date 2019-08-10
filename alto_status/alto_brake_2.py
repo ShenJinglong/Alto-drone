@@ -37,7 +37,7 @@ def alto_brake_2(flight):
 
     speed_x, speed_y = flight.get_speed()
 
-    if delay_counter >= 5:
+    if delay_counter >= 0:
         data_to_send = {
             'mode': 'brake',
             'speed_x': speed_x,

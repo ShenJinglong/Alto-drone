@@ -37,7 +37,6 @@ def alto_land(flight):
         'mode': 'land'
     }
     flight.send(data_to_send)
-
     alto_land_counter += 1
 
     if global_params.USE_VD:

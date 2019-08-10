@@ -6,6 +6,7 @@ import numpy as np
 from BaseFSM import base_fsm
 import global_params
 from stop_status import stop_params
+import macro
 
 if global_params.USE_VD:
     import V_Display as vd
@@ -53,12 +54,11 @@ def stop_to_circle(flight):
         Postion_y = 60
 
     data_to_send = {
-        'mode': 'stop_tp',
+        'mode': 'stop_tc',
         'dst_point_x': Postion_x,
         'dst_point_y': Postion_y,
-        'speed_x': 0,
-        'speed_y': 0
     }
+    print(Postion_x, Postion_y)
     flight.send(data_to_send)
     im_with_keypoints = cv2.drawKeypoints(frame, keypoints, np.array([]), (255,255,255), cv2.DRAW_MATCHES_FLAGS_NOT_DRAW_SINGLE_POINTS)
     if global_params.USE_VD:
