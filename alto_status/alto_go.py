@@ -45,11 +45,12 @@ def alto_go(flight):
         flight.median_filter.add_number_c1(math_tools.getLineWithX(lines_params[0], 0)[1])
         flight.median_filter.add_number_c2(math_tools.getLineAngleX(lines_params[0]))
     else:
-        flight.median_filter.add_number_c1(global_params.IMAGE_CENTER_Y - 30)
+        flight.median_filter.add_number_c1(global_params.IMAGE_CENTER_Y - 25)
         flight.median_filter.add_number_c2(0)
 
-    flight_angle = global_params.FLY_ANGLE_N
-    dst_point_y = flight.median_filter.get_result_number_c1() + 30
+    # flight_angle = global_params.FLY_ANGLE_N
+    flight_angle = 95
+    dst_point_y = flight.median_filter.get_result_number_c1() + 25
     path_angle = flight.median_filter.get_result_number_c2() + 100
     speed_x, speed_y = flight.get_speed()
     data_to_send = {
@@ -61,6 +62,7 @@ def alto_go(flight):
         'path_angle': path_angle
     }
     flight.send(data_to_send)
+    print('go: %d, %d' % (speed_x, speed_y))
 
     cv2.circle(frame, (0, int(dst_point_y)), 5, (255, 255, 0), -1)
 
@@ -77,7 +79,7 @@ def alto_go(flight):
             w = rect[1][0]
             h = rect[1][1]
             w_h_ratio = max([w, h]) / min([w, h])
-            print(w * h)
+            # print(w * h)
             if w * h < 2500 and w * h >  50:
                 rects.append(rect)
         img_tools.draw_rotated_rects(frame[int(global_params.IMAGE_CENTER_Y):int(global_params.IMAGE_HEIGHT), :], rects)

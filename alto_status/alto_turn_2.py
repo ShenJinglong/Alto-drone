@@ -38,6 +38,7 @@ def alto_turn_2(flight):
     lines = cv2.HoughLines(after_process_img, 1, np.pi / 180, 50, 0, 0)
     lines_class = math_tools.lineClassifier(lines)
     lines_params = math_tools.lineFit(lines_class)
+    horizontal_lines_params = math_tools.remove_vertical_line(lines_params)
     lines_params = math_tools.remove_horizontal_line(lines_params)
     for line in lines_params: img_tools.drawHoughLine(frame, line, (0, 0, 255))
 
@@ -68,9 +69,17 @@ def alto_turn_2(flight):
     else:
         cv2.imshow('frame', frame)
 
-    alto_turn_2_counter += 1
+    if len(horizontal_lines_params) == 1:
+        y_left = math_tools.getLineWithX(horizontal_lines_params[0], 0)[1]
+        y_right = math_tools.getLineWithX(horizontal_lines_params[0], 160)[1]
+        if y_left > 60 and y_right > 60:
+            alto_turn_2_counter += 1
+        else:
+            alto_turn_2_counter = 0
+    else:
+        alto_turn_2_counter = 0
 
-    if alto_turn_2_counter == 90:
+    if alto_turn_2_counter == 5:
         alto_turn_2_counter = 0
         flight.next_state = macro.ALTO_BREAK_2
         print('>>> [!] ALTO_TURN_2 -> ALTO_BREAK_2')

@@ -29,6 +29,9 @@ from alto_status.alto_brake_1 import alto_brake_1_fsm
 from alto_status.alto_turn_2 import alto_turn_2_fsm
 from alto_status.alto_brake_2 import alto_brake_2_fsm
 
+from stop_status.stop_to_circle import stop_to_circle_fsm
+from stop_status.stop_land import stop_land_fsm
+
 class fsm_mgr(object):
     def __init__(self):
         self._fsms = {}
@@ -57,6 +60,9 @@ class fsm_mgr(object):
         self._fsms[macro.ALTO_BREAK_1] = alto_brake_1_fsm()
         self._fsms[macro.ALTO_TURN_2] = alto_turn_2_fsm()
         self._fsms[macro.ALTO_BREAK_2] = alto_brake_2_fsm()
+
+        self._fsms[macro.STOP_TO_CIRCLE] = stop_to_circle_fsm()
+        self._fsms[macro.STOP_LAND] = stop_land_fsm()
 
     def get_fsm(self, state):
         return self._fsms[state]

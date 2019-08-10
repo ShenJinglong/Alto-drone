@@ -46,11 +46,12 @@ def alto_take_off(flight):
         flight.median_filter.add_number_c2(math_tools.getLineAngleX(lines_params[0]))
         alto_take_off_counter += 1
     else:
-        flight.median_filter.add_number_c1(global_params.IMAGE_CENTER_Y - 30)
+        flight.median_filter.add_number_c1(global_params.IMAGE_CENTER_Y - 15)
         flight.median_filter.add_number_c2(0)
 
-    flight_angle = global_params.FLY_ANGLE_N
-    dst_point_y = flight.median_filter.get_result_number_c1() + 30
+    # flight_angle = global_params.FLY_ANGLE_N
+    flight_angle = 95
+    dst_point_y = flight.median_filter.get_result_number_c1() + 15
     path_angle = flight.median_filter.get_result_number_c2() + 100
     speed_x, speed_y = flight.get_speed()
     data_to_send = {
@@ -62,6 +63,7 @@ def alto_take_off(flight):
         'path_angle': path_angle
     }
     flight.send(data_to_send)
+    print('take off: %d, %d' % (speed_x, speed_y))
     cv2.circle(frame, (0, int(dst_point_y)), 5, (255, 255, 0), -1)
     
     # cv2.imshow('ss', pole_buttom_roi_th)
@@ -70,7 +72,7 @@ def alto_take_off(flight):
     else:
         cv2.imshow('frame', frame)
 
-    print(alto_take_off_counter)
+    # print(alto_take_off_counter)
 
     if alto_take_off_counter == alto_params.ALTO_TAKE_OFF_NUM:
         alto_take_off_counter = 0

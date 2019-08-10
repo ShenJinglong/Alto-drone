@@ -25,24 +25,21 @@ if global_params.RASPBERRY_MODE:
     GPIO.setwarnings(False)
     GPIO.setup(global_params.MODE_PIN_1, GPIO.IN)
     GPIO.setup(global_params.MODE_PIN_2, GPIO.IN)
-    GPIO.setup(global_params.MODE_PIN_3, GPIO.IN)
-    GPIO.setup(global_params.MODE_PIN_4, GPIO.IN)
     GPIO.setup(12, GPIO.OUT, initial = GPIO.HIGH)
-    GPIO.setup(13, GPIO.OUT, initial = GPIO.HIGH)
-    GPIO.setup(17, GPIO.OUT, initial = GPIO.HIGH)
+    GPIO.setup(global_params.SHOW_MODE_PIN, GPIO.OUT, initial = GPIO.HIGH)
 
 def mode_selector(flight):
     if global_params.RASPBERRY_MODE:
         v1 = GPIO.input(global_params.MODE_PIN_1)
         v2 = GPIO.input(global_params.MODE_PIN_2)
-        v3 = GPIO.input(global_params.MODE_PIN_3)
-        v4 = GPIO.input(global_params.MODE_PIN_4)
-        if v4 and v3 and v2 and v1:
-            show_error()
-        elif v4 and v3 and v2 and not v1:
-            show_error()
-        elif v4 and v3 and not v2 and v1:
-            show_error()
+        if v2 and v1:
+            flight.next_state = macro.ALTO_TAKE_OFF
+            flight.main_mode = 0x70
+            show_mode(1)
+        elif v2 and not v1:
+            flight.next_state = macro.STOP_TO_CIRCLE
+            flight.main_mode = 0x10
+            show_mode(2)
         else:
             show_error()
     else:

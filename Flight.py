@@ -26,7 +26,9 @@ class Flight(object):
         # self.__cap = cv2.VideoCapture('../videos/2019-08-08 11-31-32.avi')
         # self.__cap = cv2.VideoCapture('../videos/2019-08-08 17-53-27.avi')
         # self.__cap = cv2.VideoCapture('../videos/2019-08-08 18-46-32.avi')
-        # self.__cap = cv2.VideoCapture('../videos/2019-08-09 05-53-40.avi')
+        # self.__cap = cv2.VideoCapture('../videos/2019-08-09 15-11-46.avi')
+        # self.__cap = cv2.VideoCapture('../videos/2019-08-09 15-08-18.avi')
+        # self.__cap = cv2.VideoCapture('../videos/2019-08-09 16-06-28.avi')
 
         self.median_filter = MedianFilter()
         self.main_mode = 0x70
@@ -73,7 +75,7 @@ class Flight(object):
             self.__optical_flow.join()
 
     def send(self, uart_buff):
-        get_bytearray(uart_buff, self)
+        # get_bytearray(uart_buff, self)
         if global_params.RASPBERRY_MODE:
             if type(uart_buff) == dict:
                 com.send(get_bytearray(uart_buff, self))
@@ -147,5 +149,10 @@ def get_bytearray(data_dict, flight):
         return bytearray([0x55,           0xAA,                  flight_mode,    0x00,
                           0x00,           (speed_x >> 8) & 0xff, speed_x & 0xff, (speed_y >> 8) & 0xff, 
                           speed_y & 0xff, 0x00,                  0x00,           0xAA                  ])
-
-        
+    elif data_dict['mode'] == 'land':
+        dst_point_x = int(80)
+        dst_point_y = int(60)
+        flight_mode = flight.main_mode + 0x00
+        return bytearray([0x55,               0xAA, flight_mode, dst_point_x & 0xff,
+                          dst_point_y & 0xff, 0x00, 0x00,        0x00,
+                          0x00,               0x00, 0x02,        0xAA               ])

@@ -19,8 +19,7 @@ USE_VD = True if sys.platform == 'linux2' else False
 
 MODE_PIN_1 = 7
 MODE_PIN_2 = 8
-MODE_PIN_3 = 9
-MODE_PIN_4 = 10
+SHOW_MODE_PIN = 9
 
 """
 CANNY_GRID_TH_MAX = 230    # 150   # 180 # 250                                       # Canny 梯度大阈值 # 200

@@ -8,7 +8,7 @@ def image_pre_process(src_img):
     img = src_img.copy()
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     reduce_noise_img = cv2.GaussianBlur(gray_img, (5,5), 0, 0) # 9，9
-    edges = cv2.Canny(reduce_noise_img, 45, 90, apertureSize = 3)
+    edges = cv2.Canny(reduce_noise_img, 35, 70, apertureSize = 3)
 
     kernel = np.ones((5, 5), np.uint8)
     dilation = cv2.dilate(edges, kernel, iterations = 1)
